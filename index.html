@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AI-powered financial assistant that analyzes recurring expenses and subscriptions, identifies wasteful spending, and suggests money-saving opportunities.">
+    <title>SubSaver AI — Smart Subscription Analyzer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="bg-gradient"></div>
+    <div class="bg-grid"></div>
+    <div class="floating-orbs">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <!-- Header -->
+    <header id="app-header">
+        <div class="header-content">
+            <div class="logo-group">
+                <div class="logo-icon">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                        <defs>
+                            <linearGradient id="logoGrad" x1="0" y1="0" x2="32" y2="32">
+                                <stop offset="0%" stop-color="#6C5CE7"/>
+                                <stop offset="100%" stop-color="#00D2FF"/>
+                            </linearGradient>
+                        </defs>
+                        <rect width="32" height="32" rx="8" fill="url(#logoGrad)" opacity="0.15"/>
+                        <path d="M10 22V14L16 10L22 14V22L16 18L10 22Z" stroke="url(#logoGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                        <circle cx="16" cy="16" r="2" fill="url(#logoGrad)"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="logo-text">SubSaver<span class="logo-ai">AI</span></h1>
+                    <p class="logo-tagline">Smart Subscription Analyzer</p>
+                </div>
+            </div>
+            <nav class="header-nav">
+                <button id="btn-theme-toggle" class="btn-icon" title="Toggle theme" aria-label="Toggle theme">
+                    <svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+                    <svg class="icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Application -->
+    <main id="app-main">
+        <!-- Hero Section -->
+        <section id="hero-section" class="section">
+            <div class="hero-badge">
+                <span class="badge-dot"></span>
+                AI-Powered Analysis
+            </div>
+            <h2 class="hero-title">Stop Wasting Money on<br><span class="gradient-text">Forgotten Subscriptions</span></h2>
+            <p class="hero-subtitle">Paste your transaction data and let our AI instantly detect recurring charges, identify duplicates, and find savings opportunities.</p>
+        </section>
+
+        <!-- Input Section -->
+        <section id="input-section" class="section">
+            <div class="card card-input">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                    </div>
+                    <div>
+                        <h3>Transaction Data</h3>
+                        <p class="card-desc">Paste your bank statement or transaction history</p>
+                    </div>
+                </div>
+
+                <div class="input-tabs">
+                    <button class="tab-btn active" data-tab="csv" id="tab-csv">CSV / Text</button>
+                    <button class="tab-btn" data-tab="manual" id="tab-manual">Manual Entry</button>
+                    <button class="tab-btn" data-tab="sample" id="tab-sample">Sample Data</button>
+                </div>
+
+                <div class="tab-content active" id="content-csv">
+                    <div class="textarea-wrapper">
+                        <textarea id="csv-input" placeholder="Paste your CSV data here...&#10;&#10;Format: date, description, amount&#10;Example:&#10;2026-01-05, Netflix, -15.99&#10;2026-01-10, Spotify Premium, -9.99&#10;2026-02-05, Netflix, -15.99" rows="10" spellcheck="false"></textarea>
+                        <div class="textarea-footer">
+                            <span class="char-count" id="char-count">0 characters</span>
+                            <button class="btn-sm btn-ghost" id="btn-clear-csv">Clear</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="content-manual">
+                    <div id="manual-entries">
+                        <div class="manual-entry-row" data-index="0">
+                            <input type="date" class="input-field entry-date" placeholder="Date" id="entry-date-0">
+                            <input type="text" class="input-field entry-desc" placeholder="Description (e.g., Netflix)" id="entry-desc-0">
+                            <input type="number" class="input-field entry-amount" placeholder="Amount" step="0.01" id="entry-amount-0">
+                            <select class="input-field entry-freq" id="entry-freq-0">
+                                <option value="monthly">Monthly</option>
+                                <option value="yearly">Yearly</option>
+                                <option value="weekly">Weekly</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="btn-sm btn-outline" id="btn-add-entry">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        Add Entry
+                    </button>
+                </div>
+
+                <div class="tab-content" id="content-sample">
+                    <div class="sample-options">
+                        <button class="sample-card" id="sample-basic" data-sample="basic">
+                            <div class="sample-icon">📊</div>
+                            <div class="sample-info">
+                                <strong>Basic Example</strong>
+                                <span>12 transactions, 5 subscriptions</span>
+                            </div>
+                        </button>
+                        <button class="sample-card" id="sample-heavy" data-sample="heavy">
+                            <div class="sample-icon">💸</div>
+                            <div class="sample-info">
+                                <strong>Heavy Spender</strong>
+                                <span>30 transactions, 12 subscriptions</span>
+                            </div>
+                        </button>
+                        <button class="sample-card" id="sample-duplicate" data-sample="duplicate">
+                            <div class="sample-icon">🔄</div>
+                            <div class="sample-info">
+                                <strong>Duplicate Finder</strong>
+                                <span>20 transactions with duplicates</span>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card-actions">
+                    <button class="btn btn-primary btn-analyze" id="btn-analyze" disabled>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                        Analyze Expenses
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Loading State -->
+        <section id="loading-section" class="section hidden">
+            <div class="loading-container">
+                <div class="loading-spinner">
+                    <div class="spinner-ring"></div>
+                    <div class="spinner-ring"></div>
+                    <div class="spinner-ring"></div>
+                </div>
+                <h3 class="loading-text">Analyzing your transactions...</h3>
+                <div class="loading-steps">
+                    <div class="step" id="step-parse"><span class="step-dot"></span> Parsing data</div>
+                    <div class="step" id="step-detect"><span class="step-dot"></span> Detecting subscriptions</div>
+                    <div class="step" id="step-duplicates"><span class="step-dot"></span> Finding duplicates</div>
+                    <div class="step" id="step-savings"><span class="step-dot"></span> Calculating savings</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Results Section -->
+        <section id="results-section" class="section hidden">
+            <!-- Summary Cards -->
+            <div class="summary-grid">
+                <div class="summary-card" id="card-total-subs">
+                    <div class="summary-icon icon-subs">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    </div>
+                    <div class="summary-value" id="val-total-subs">0</div>
+                    <div class="summary-label">Active Subscriptions</div>
+                </div>
+                <div class="summary-card" id="card-monthly-cost">
+                    <div class="summary-icon icon-monthly">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    </div>
+                    <div class="summary-value" id="val-monthly-cost">$0</div>
+                    <div class="summary-label">Monthly Cost</div>
+                </div>
+                <div class="summary-card" id="card-yearly-cost">
+                    <div class="summary-icon icon-yearly">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                    </div>
+                    <div class="summary-value" id="val-yearly-cost">$0</div>
+                    <div class="summary-label">Yearly Cost</div>
+                </div>
+                <div class="summary-card card-savings" id="card-potential-savings">
+                    <div class="summary-icon icon-savings">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+                    </div>
+                    <div class="summary-value" id="val-potential-savings">$0</div>
+                    <div class="summary-label">Potential Savings/yr</div>
+                </div>
+            </div>
+
+            <!-- Subscriptions Table -->
+            <div class="card card-results" id="card-subscriptions">
+                <div class="card-header">
+                    <div class="card-icon icon-gradient-purple">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                    </div>
+                    <div>
+                        <h3>Detected Subscriptions</h3>
+                        <p class="card-desc">All recurring payments found in your data</p>
+                    </div>
+                </div>
+                <div class="table-wrapper">
+                    <table id="subscriptions-table">
+                        <thead>
+                            <tr>
+                                <th>Service</th>
+                                <th>Category</th>
+                                <th>Frequency</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="subscriptions-body"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Wasteful Expenses -->
+            <div class="card card-results" id="card-wasteful">
+                <div class="card-header">
+                    <div class="card-icon icon-gradient-red">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    </div>
+                    <div>
+                        <h3>Wasteful Expenses</h3>
+                        <p class="card-desc">Unnecessary or duplicate subscriptions detected</p>
+                    </div>
+                </div>
+                <div id="wasteful-list" class="alert-list"></div>
+            </div>
+
+            <!-- Savings Opportunities -->
+            <div class="card card-results" id="card-opportunities">
+                <div class="card-header">
+                    <div class="card-icon icon-gradient-green">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    </div>
+                    <div>
+                        <h3>Savings Opportunities</h3>
+                        <p class="card-desc">Ways to reduce your recurring expenses</p>
+                    </div>
+                </div>
+                <div id="savings-list" class="opportunity-list"></div>
+            </div>
+
+            <!-- Action Plan -->
+            <div class="card card-results" id="card-action-plan">
+                <div class="card-header">
+                    <div class="card-icon icon-gradient-blue">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    </div>
+                    <div>
+                        <h3>Action Plan</h3>
+                        <p class="card-desc">Step-by-step guide to save money</p>
+                    </div>
+                </div>
+                <div id="action-list" class="action-list"></div>
+            </div>
+
+            <!-- User Report -->
+            <div class="card card-results card-report" id="card-report">
+                <div class="card-header">
+                    <div class="card-icon icon-gradient-orange">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                    </div>
+                    <div>
+                        <h3>Your Money Report</h3>
+                        <p class="card-desc">Simple summary — no jargon, just savings</p>
+                    </div>
+                    <button class="btn-sm btn-outline btn-copy" id="btn-copy-report" title="Copy Report">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                        Copy
+                    </button>
+                </div>
+                <div class="report-body" id="report-body"></div>
+            </div>
+
+            <!-- JSON Output -->
+            <div class="card card-results" id="card-json">
+                <div class="card-header">
+                    <div class="card-icon icon-gradient-cyan">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                    </div>
+                    <div>
+                        <h3>Structured JSON Output</h3>
+                        <p class="card-desc">Machine-readable analysis result</p>
+                    </div>
+                    <button class="btn-sm btn-outline btn-copy" id="btn-copy-json" title="Copy JSON">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                        Copy
+                    </button>
+                </div>
+                <pre class="json-output"><code id="json-output"></code></pre>
+            </div>
+
+            <!-- Reset -->
+            <div class="reset-area">
+                <button class="btn btn-secondary" id="btn-reset">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+                    Analyze New Data
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer id="app-footer">
+        <p>SubSaver AI &mdash; Your smart subscription analyzer &bull; No data leaves your browser</p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
